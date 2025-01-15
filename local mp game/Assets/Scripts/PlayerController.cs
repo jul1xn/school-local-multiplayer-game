@@ -4,228 +4,107 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    // Public Fields
+    [Header("Player properties")]
     public float speed = 5;
     public float jumpForce = 10f;
-    public float superJumpForce = 15f;
-    public Sprite defaultSprite;
-    public Sprite crouchSprite;
-    public Sprite jumpSprite;
-    public Sprite landSprite;
-    public float crouchHoldTime = 1.5f;
     public float crouchSpeedMultiplier = 0.35f;
-    public float maxSuperJumpTime = 5f;
     public float sprintSpeedMultiplier = 1.5f;
+    public float groundCheckRadius = 0.1f;
+    [Header("Super jump properties")]
+    public float crouchHoldTime = 1.5f;
+    public float superJumpForce = 15f;
+    private float jumpStarttime;
+    private bool ischarging;
+    [Header("Player 1")]
+    public Rigidbody2D player1Rb;
+    public Animator player1Animator;
+    public Transform p1GroundCheck;
+    public SpriteRenderer player1SpriteRenderer;
+    private bool p1Crouching;
+    private bool p1Sprinting;
+    private bool p1SuperJump;
 
-    // Private Fields
-    private Rigidbody2D rb;
-    private BoxCollider2D playerCollider;
-    private SpriteRenderer spriteRenderer;
-    private float horizontalValue;
-    private bool facingRight = true;
-    private bool isCrouching = false;
-    private bool isJumping = false;
-    private bool superJumpReady = false;
-    private float crouchTimer = 0f;
-    private float superJumpTimer = 0f;
-
-    // Original collider size and offset
-    private Vector2 originalColliderSize;
-    private Vector2 originalColliderOffset;
-
-    void Awake()
+    private void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        playerCollider = GetComponent<BoxCollider2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-
-        // Save original collider size and offset
-        originalColliderSize = playerCollider.size;
-        originalColliderOffset = playerCollider.offset;
+        Application.targetFrameRate = 60;
     }
 
-    void Update()
+    private void OnDrawGizmos()
     {
-        horizontalValue = Input.GetAxisRaw("Horizontal");
-        HandleCrouch();
-        HandleJump();
+        Gizmos.DrawWireSphere(p1GroundCheck.position, groundCheckRadius);
+        //Gizmos.DrawWireSphere(p1GroundCheck.position, groundCheckRadius);
     }
 
-    void FixedUpdate()
+    private void Player1Logic()
     {
-        float currentSpeed = isCrouching ? speed * crouchSpeedMultiplier : speed;
-        Move(horizontalValue, currentSpeed);
+        // Initialize values
+        float horizontalValue = 0;
+        float currentSpeed = speed;
+        bool isGrounded = IsGrounded(p1GroundCheck);
 
-        // Handle faster falling
-        if (rb.velocity.y < 0)
+        // Get horizontal movement
+        if (Input.GetKey(KeyCode.A)) { horizontalValue = -1; }
+        if (Input.GetKey(KeyCode.D)) { horizontalValue = 1; }
+        if (horizontalValue != 0) { player1SpriteRenderer.flipX = Input.GetKey(KeyCode.A); }
+
+        // Set some variables
+        p1Crouching = Input.GetKey(KeyCode.S);
+        p1Sprinting = Input.GetKey(KeyCode.LeftShift);
+
+        // Set the speed
+        if (p1Crouching) { currentSpeed *= crouchSpeedMultiplier; }
+        if (p1Sprinting && !p1Crouching) { currentSpeed *= sprintSpeedMultiplier; }
+
+        // Apply the speed
+        Vector2 targetVelocity = new(horizontalValue * currentSpeed * 100 * Time.deltaTime, player1Rb.velocity.y);
+        player1Rb.velocity = targetVelocity;
+
+        // Checks for that the player falls slower that it moves up
+        if (player1Rb.velocity.y < 0)
         {
-            rb.velocity += 2f * Physics2D.gravity.y * Time.deltaTime * Vector2.up; // Faster fall
+            player1Rb.velocity += 2f * Physics2D.gravity.y * Time.deltaTime * Vector2.up; // Faster jump
         }
-        else if (rb.velocity.y > 0 && !Input.GetKey(KeyCode.W))
+        else if (player1Rb.velocity.y > 0 && !Input.GetKey(KeyCode.W))
         {
-            rb.velocity += 1f * Physics2D.gravity.y * Time.deltaTime * Vector2.up; // Slower jump ascent
+            player1Rb.velocity += 1f * Physics2D.gravity.y * Time.deltaTime * Vector2.up; // Slower fall
         }
 
-        // Check if landed
-        CheckLanding();
-    }
-
-    void Move(float dir, float moveSpeed)
-    {
-        // Check if Shift is held for sprinting
-        if (Input.GetKey(KeyCode.LeftShift) && !isCrouching)
+        // Super jump logic
+        if (p1Crouching && isGrounded)
         {
-            moveSpeed *= sprintSpeedMultiplier;
-        }
-
-        float xVal = dir * moveSpeed * 100 * Time.deltaTime;
-        Vector2 targetVelocity = new(xVal, rb.velocity.y);
-        rb.velocity = targetVelocity;
-
-        // Flip player direction
-        if (facingRight && dir < 0)
-        {
-            transform.localScale = new Vector3(-1, 1, 1);
-            facingRight = false;
-        }
-        else if (!facingRight && dir > 0)
-        {
-            transform.localScale = new Vector3(1, 1, 1);
-            facingRight = true;
-        }
-    }
-
-    void HandleCrouch()
-    {
-        if (Input.GetKey(KeyCode.S))
-        {
-            crouchTimer += Time.deltaTime;
-            if (crouchTimer >= crouchHoldTime && !isCrouching)
+            if (!ischarging)
             {
-                StartCrouching();
+                jumpStarttime = Time.time + crouchHoldTime;
+                ischarging = true;
+            }
+
+            if (ischarging && Time.time > jumpStarttime)
+            {
+                p1SuperJump = true;
             }
         }
         else
         {
-            if (crouchTimer >= crouchHoldTime)
-            {
-                superJumpReady = true;
-                superJumpTimer = maxSuperJumpTime; // Set timer for super jump activation
-            }
-
-            crouchTimer = 0f;
-
-            if (isCrouching)
-            {
-                StopCrouching();
-            }
+            jumpStarttime = 0;
         }
 
-        // Count down the super jump timer
-        if (superJumpReady)
+        // Check if player can jump
+        if (Input.GetKey(KeyCode.W) && isGrounded)
         {
-            superJumpTimer -= Time.deltaTime;
-            if (superJumpTimer <= 0f)
-            {
-                superJumpReady = false; // Expire super jump window
-            }
+            float force = jumpForce;
+            // If it is a super jump, use that force instead
+            if (p1SuperJump) { force = superJumpForce; p1SuperJump = false; }
+            player1Rb.velocity = new Vector2(player1Rb.velocity.x, force);
         }
     }
 
-    void StartCrouching()
+    private bool IsGrounded(Transform groundCheck)
     {
-        isCrouching = true;
-        spriteRenderer.sprite = crouchSprite; // Change to crouch sprite
-        AdjustColliderToSprite(crouchSprite);
-
-        Debug.Log("Crouching: Collider adjusted.");
+        return Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius) != null;
     }
 
-    void StopCrouching()
+    private void Update()
     {
-        isCrouching = false;
-        spriteRenderer.sprite = defaultSprite; // Change back to default sprite
-        ResetColliderToDefault();
-
-        Debug.Log("Stopped Crouching: Collider reset.");
-    }
-
-    void HandleJump()
-    {
-        if (Input.GetKeyDown(KeyCode.W) && IsGrounded())
-        {
-            if (superJumpReady)
-            {
-                Jump(superJumpForce); // Perform super jump
-                superJumpReady = false; // Consume super jump
-            }
-            else
-            {
-                Jump(jumpForce); // Perform normal jump
-            }
-        }
-    }
-
-    void Jump(float force)
-    {
-        isJumping = true;
-        rb.velocity = new Vector2(rb.velocity.x, force);
-        spriteRenderer.sprite = jumpSprite; // Change to jump sprite
-        Debug.Log("Jumping with force: " + force);
-    }
-
-    void AdjustColliderToSprite(Sprite sprite)
-    {
-        Bounds spriteBounds = sprite.bounds;
-
-        // Adjust collider size and offset based on sprite bounds
-        playerCollider.size = new Vector2(spriteBounds.size.x, spriteBounds.size.y);
-        playerCollider.offset = new Vector2(spriteBounds.center.x, spriteBounds.center.y);
-    }
-
-    bool IsGrounded()
-    {
-        // Check if the player is on the ground
-        return rb.velocity.y == 0;
-    }
-
-    void CheckLanding()
-    {
-        if (isJumping && IsGrounded())
-        {
-            isJumping = false;
-            spriteRenderer.sprite = landSprite; // Set to land sprite
-            StartCoroutine(WaitAndResetSprite()); // Start the coroutine to wait and reset the sprite
-
-            // Reset the collider size and offset to match the land sprite
-            AdjustColliderToSprite(landSprite);  // Adjust collider size just like when crouching
-            Debug.Log("Landed: Sprite and collider adjusted to land.");
-        }
-    }
-
-    IEnumerator WaitAndResetSprite()
-    {
-        // Wait for 1 second before resetting the sprite
-        yield return new WaitForSeconds(0.35f);
-
-        // Reset sprite to default after 1 second
-        spriteRenderer.sprite = defaultSprite;
-    }
-
-    void ResetColliderToDefault()
-    {
-        // Reset the collider size and offset to the original values
-        playerCollider.size = originalColliderSize;
-        playerCollider.offset = originalColliderOffset;
-    }
-
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        // Check if the player collided with the ground (adjust your tag or layer name as needed)
-        if (collision.gameObject.CompareTag("Ground") && isJumping)
-        {
-            // Landed, reset the jump flag
-            CheckLanding();
-        }
+        Player1Logic();
     }
 }
