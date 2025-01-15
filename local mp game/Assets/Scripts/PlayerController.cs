@@ -67,6 +67,7 @@ public class PlayerController : MonoBehaviour
         p1Crouching = Input.GetKey(KeyCode.S);
         p1Sprinting = Input.GetKey(KeyCode.LeftShift);
 
+        // Set the collider size according to if the player is crouching
         if (p1Crouching)
         {
             player1Collider.size = new Vector2(crouchedSizeX, crouchedSizeY);
@@ -138,6 +139,7 @@ public class PlayerController : MonoBehaviour
         // Set some variables
         p2Crouching = Input.GetKey(KeyCode.DownArrow);
 
+        // Set the collider size according to if the player is crouching
         if (p2Crouching)
         {
             player2Collider.size = new Vector2(crouchedSizeX, crouchedSizeY);
@@ -175,6 +177,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Check if the player is grounded by getting items colliding with the groundcheck gameobj,
+    // and if there are any objects that have the tag groundCheck in that, its grounded.
     private bool IsGrounded(Transform groundCheck)
     {
         ContactFilter2D filter = new ContactFilter2D();
@@ -195,6 +199,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        // Call the player logic functions
         P1Logic();
         P2Logic();
     }
