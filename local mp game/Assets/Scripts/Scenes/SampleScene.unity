@@ -781,14 +781,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2972f96ef6563d444b643558af9cf786, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
-  jumpForce: 10
+  speed: 3
+  jumpForce: 6
   crouchSpeedMultiplier: 0.35
-  sprintSpeedMultiplier: 1.5
+  sprintSpeedMultiplier: 1.3
   groundCheckRadius: 0.1
   groundTag: Ground
   crouchHoldTime: 1.5
-  superJumpForce: 15
+  superJumpForce: 9
   normalSizeX: 0.6
   normalSizeY: 1
   crouchedSizeX: 0.6
