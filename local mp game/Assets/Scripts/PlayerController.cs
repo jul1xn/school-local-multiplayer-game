@@ -115,7 +115,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Check if player can jump
-        if (Input.GetKey(KeyCode.W) && isGrounded)
+        if (Input.GetKeyDown(KeyCode.W) && isGrounded)
         {
             float force = jumpForce;
             // If it is a super jump, use that force instead
@@ -170,7 +170,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Check if player can jump
-        if (Input.GetKey(KeyCode.UpArrow) && isGrounded)
+        if (Input.GetKeyDown(KeyCode.UpArrow) && isGrounded)
         {
             float force = jumpForce;
             player2Rb.velocity = new Vector2(player2Rb.velocity.x, force);
