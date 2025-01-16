@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class ExitDoor : MonoBehaviour
 {
+    public TMP_Text percentageText;
     public Slider Slider;
     public float playerDistance;
     public float heightPercentage;
@@ -26,6 +28,7 @@ public class ExitDoor : MonoBehaviour
         playerDistance = exitHeight - x;
         heightPercentage = Mathf.Clamp(((x - startHeight) / (exitHeight - startHeight)) * 100f, 0, 100);
         Slider.value = heightPercentage;
+        percentageText.text = $"{Mathf.Round(heightPercentage)}%";
     }
 
     public void OnTriggerEnter2D(Collider2D collision)
