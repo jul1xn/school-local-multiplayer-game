@@ -6,6 +6,7 @@ public class SceneLoader : MonoBehaviour
 {
     public TextMeshProUGUI scoreLabel;
     public TextMeshProUGUI mapNameLabel;
+    public string visibleName;
     public string sceneName;
 
     private void OnEnable()
@@ -15,7 +16,7 @@ public class SceneLoader : MonoBehaviour
 
     private void LoadScoreAndMapName()
     {
-        float score = ScoreSaver.GetTime(1);
+        float score = ScoreSaver.GetTime(int.Parse(sceneName.Split("_")[1]));
 
         if (score == -1)
         {
@@ -24,7 +25,7 @@ public class SceneLoader : MonoBehaviour
 
 
         scoreLabel.text = "Score: " + score.ToString("F2");
-        mapNameLabel.text = "Map Name: " + sceneName;
+        mapNameLabel.text = "Map Name: " + visibleName;
     }
 
     public void LoadScene()

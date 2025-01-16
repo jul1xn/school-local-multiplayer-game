@@ -1695,6 +1695,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scoreLabel: {fileID: 1142824378}
   mapNameLabel: {fileID: 2060102104}
+  visibleName: Tutorial
   sceneName: Level_0
 --- !u!1 &720994542
 GameObject:
@@ -2806,6 +2807,7 @@ GameObject:
   - component: {fileID: 1007159766}
   - component: {fileID: 1007159768}
   - component: {fileID: 1007159767}
+  - component: {fileID: 1007159769}
   m_Layer: 5
   m_Name: LevelPanel (1)
   m_TagString: Untagged
@@ -2874,6 +2876,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1007159765}
   m_CullTransparentMesh: 1
+--- !u!114 &1007159769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1007159765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ba6591b51571974dac0a68753ba95e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreLabel: {fileID: 966335663}
+  mapNameLabel: {fileID: 1956461772}
+  visibleName: 
+  sceneName: Level_2
 --- !u!1 &1142824376
 GameObject:
   m_ObjectHideFlags: 0
@@ -3814,6 +3832,7 @@ GameObject:
   - component: {fileID: 1367004207}
   - component: {fileID: 1367004209}
   - component: {fileID: 1367004208}
+  - component: {fileID: 1367004210}
   m_Layer: 5
   m_Name: LevelPanel (3)
   m_TagString: Untagged
@@ -3882,6 +3901,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1367004206}
   m_CullTransparentMesh: 1
+--- !u!114 &1367004210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367004206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ba6591b51571974dac0a68753ba95e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreLabel: {fileID: 52679291}
+  mapNameLabel: {fileID: 1263285592}
+  visibleName: 
+  sceneName: Level_1
 --- !u!1 &1477658032
 GameObject:
   m_ObjectHideFlags: 0
@@ -5035,6 +5070,7 @@ GameObject:
   - component: {fileID: 2078664869}
   - component: {fileID: 2078664871}
   - component: {fileID: 2078664870}
+  - component: {fileID: 2078664872}
   m_Layer: 5
   m_Name: LevelPanel (2)
   m_TagString: Untagged
@@ -5103,6 +5139,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2078664868}
   m_CullTransparentMesh: 1
+--- !u!114 &2078664872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2078664868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ba6591b51571974dac0a68753ba95e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreLabel: {fileID: 887294386}
+  mapNameLabel: {fileID: 1281518661}
+  visibleName: 
+  sceneName: Level_3
 --- !u!1 &2132231862
 GameObject:
   m_ObjectHideFlags: 0
