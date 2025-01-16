@@ -18,6 +18,8 @@ public class Player_death : MonoBehaviour
 
     public void ResetGameVariables()
     {
-        
+        PlayerController.instance.gameRunning = false;
+        int level_id = int.Parse(SceneManager.GetActiveScene().name.Split("_")[0]);
+        ScoreSaver.SaveTime(level_id, PlayerController.instance.currentTime);
     }
 }

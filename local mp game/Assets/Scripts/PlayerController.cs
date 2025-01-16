@@ -1,9 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
+    public static PlayerController instance;
+    [Header("Game properties")]
+    public bool gameRunning = true;
+    public float currentTime;
+    private float time;
+    [Header("UI properties")]
+    public TMP_Text timeText;
     [Header("Player properties")]
     public float speed = 5;
     public float jumpForce = 10f;
@@ -40,15 +48,38 @@ public class PlayerController : MonoBehaviour
     private bool p2Sprinting;
     private bool p2SuperJump;
 
+    private void Awake()
+    {
+        instance = this;
+    }
+
     private void Start()
     {
         Application.targetFrameRate = 60;
+        time = Time.time;
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(p1GroundCheck.position, groundCheckRadius);
         Gizmos.DrawWireSphere(p2GroundCheck.position, groundCheckRadius);
+    }
+
+    private void GameLogic()
+    { 
+        if (gameRunning)
+        {
+            // Calculate current time
+            currentTime = Time.time - time;
+
+            // Calculate minutes, seconds, and milliseconds
+            int minutes = Mathf.FloorToInt(currentTime / 60f);
+            int seconds = Mathf.FloorToInt(currentTime % 60f);
+            int milliseconds = Mathf.FloorToInt((currentTime * 100f) % 100f);
+
+            // Set the time ui element according to the time
+            timeText.text = $"{minutes}:{seconds:D2},{milliseconds:D2}";
+        }
     }
 
     private void P1Logic()
@@ -202,5 +233,8 @@ public class PlayerController : MonoBehaviour
         // Call the player logic functions
         P1Logic();
         P2Logic();
+
+        // Handle game logic
+        GameLogic();
     }
 }
