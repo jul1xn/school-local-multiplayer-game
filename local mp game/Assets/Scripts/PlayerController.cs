@@ -231,8 +231,11 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         // Call the player logic functions
-        P1Logic();
-        P2Logic();
+        if (gameRunning)
+        {
+            P1Logic();
+            P2Logic();
+        }
 
         // Handle game logic
         GameLogic();
