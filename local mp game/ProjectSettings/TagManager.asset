@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - Player_1
   - Player_2
+  - Door_1
   layers:
   - Default
   - TransparentFX
