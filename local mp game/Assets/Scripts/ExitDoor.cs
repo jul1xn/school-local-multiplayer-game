@@ -7,6 +7,7 @@ using TMPro;
 
 public class ExitDoor : MonoBehaviour
 {
+    public Canvas endCanvas;
     public TMP_Text percentageText;
     public Slider Slider;
     public float playerDistance;
@@ -18,8 +19,26 @@ public class ExitDoor : MonoBehaviour
 
     private void Start()
     {
+        endCanvas.gameObject.SetActive(false);
         exitHeight = transform.position.y;
         startHeight = (PlayerController.instance.player1Collider.transform.position.y + PlayerController.instance.player2Collider.transform.position.y) / 2;
+    }
+
+    public void NextLevel()
+    {
+        int level_id = int.Parse(SceneManager.GetActiveScene().name.Split("_")[1]) + 1;
+        SceneManager.LoadScene($"Level_{level_id}");
+    }
+
+    public void ReturnToMainMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 
     private void Update()
@@ -45,9 +64,11 @@ public class ExitDoor : MonoBehaviour
 
         if (player1Entered && player2Entered)
         {
+            endCanvas.gameObject.SetActive(true);
             PlayerController.instance.gameRunning = false;
             int level_id = int.Parse(SceneManager.GetActiveScene().name.Split("_")[1]);
             ScoreSaver.SaveTime(level_id, PlayerController.instance.currentTime);
+            ScoreSaver.SetUnlockedLevel(level_id + 1, true);
         }
     }
 }

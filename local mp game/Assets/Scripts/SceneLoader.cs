@@ -1,9 +1,12 @@
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
+    public Button loadButton;
+    public TMP_Text loadButtonText;
     public TextMeshProUGUI scoreLabel;
     public TextMeshProUGUI mapNameLabel;
     public string visibleName;
@@ -16,7 +19,8 @@ public class SceneLoader : MonoBehaviour
 
     private void LoadScoreAndMapName()
     {
-        float score = ScoreSaver.GetTime(int.Parse(sceneName.Split("_")[1]));
+        int target_id = int.Parse(sceneName.Split("_")[1]);
+        float score = ScoreSaver.GetTime(target_id);
 
         if (score == -1)
         {
@@ -26,6 +30,12 @@ public class SceneLoader : MonoBehaviour
 
         scoreLabel.text = "Score: " + score.ToString("F2");
         mapNameLabel.text = "Map Name: " + visibleName;
+
+        if (!ScoreSaver.HasUnlockedLevel(target_id))
+        {
+            loadButton.interactable = false;
+            loadButtonText.text = "Locked";
+        }
     }
 
     public void LoadScene()
