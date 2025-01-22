@@ -7,6 +7,7 @@ using TMPro;
 
 public class ExitDoor : MonoBehaviour
 {
+    public GameObject lava_optional;
     public AudioSource exitSource;
     public Canvas endCanvas;
     public TMP_Text percentageText;
@@ -65,6 +66,10 @@ public class ExitDoor : MonoBehaviour
 
         if (player1Entered && player2Entered)
         {
+            if (lava_optional != null)
+            {
+                lava_optional.SetActive(false);
+            }
             endCanvas.gameObject.SetActive(true);
             exitSource.Play();
             PlayerController.instance.gameRunning = false;
