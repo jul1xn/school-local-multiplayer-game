@@ -7,6 +7,7 @@ using TMPro;
 
 public class ExitDoor : MonoBehaviour
 {
+    public AudioSource exitSource;
     public Canvas endCanvas;
     public TMP_Text percentageText;
     public Slider Slider;
@@ -65,6 +66,7 @@ public class ExitDoor : MonoBehaviour
         if (player1Entered && player2Entered)
         {
             endCanvas.gameObject.SetActive(true);
+            exitSource.Play();
             PlayerController.instance.gameRunning = false;
             int level_id = int.Parse(SceneManager.GetActiveScene().name.Split("_")[1]);
             ScoreSaver.SaveTime(level_id, PlayerController.instance.currentTime);

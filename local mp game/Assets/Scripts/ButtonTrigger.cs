@@ -10,6 +10,7 @@ public class ButtonTrigger : MonoBehaviour
     public string triggerableBy;
     private bool hasbeentriggered = false;
     private SpriteRenderer spriteRenderer;
+    public AudioSource triggerAudioSource;
 
     private void Start()
     {
@@ -33,6 +34,7 @@ public class ButtonTrigger : MonoBehaviour
                 if (obj != null)
                 {
                     obj.GetComponent<ButtonTriggerDoor>().TriggerDoor();
+                    triggerAudioSource.Play();
                 }
                 else
                 {
@@ -52,6 +54,7 @@ public class ButtonTrigger : MonoBehaviour
             if (obj != null)
             {
                 obj.GetComponent<ButtonTriggerDoor>().TriggerDoor();
+                triggerAudioSource.Play();
             }
             else
             {
