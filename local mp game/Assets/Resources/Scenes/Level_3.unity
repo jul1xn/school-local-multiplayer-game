@@ -1979,7 +1979,7 @@ MonoBehaviour:
   backtomenuBtn: {fileID: 1690881400199824412}
   destopBtn: {fileID: 7915183271866237448}
   moveSpeed: 5
-  timeDivider: 100
+  timeDivider: 200
   currentTime: 0
 --- !u!1 &771254727
 GameObject:
